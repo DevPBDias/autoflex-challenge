@@ -1,5 +1,11 @@
+import { ZodError } from "zod";
 import { ProductRepository } from "./product.repository";
-import { CreateProductDTO, UpdateProductDTO } from "./dto/product.dto";
+import {
+  CreateProductSchema,
+  UpdateProductSchema,
+  CreateProductDTO,
+  UpdateProductDTO,
+} from "./dto/product.dto";
 
 const UUID_REGEX =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -12,31 +18,22 @@ export class ProductService {
   }
 
   async createProduct(data: CreateProductDTO) {
-    if (!data.code || !data.name || data.value === undefined) {
+    const parsed = CreateProductSchema.safeParse(data);
+    if (!parsed.success) {
       throw {
         status: 422,
-        message: "Missing required fields: code, name, value",
+        message: parsed.error.issues[0]?.message || "Validation failed",
       };
     }
 
-    if (typeof data.code !== "string" || data.code.trim().length === 0) {
-      throw { status: 422, message: "Field 'code' must be a non-empty string" };
-    }
-
-    if (typeof data.name !== "string" || data.name.trim().length === 0) {
-      throw { status: 422, message: "Field 'name' must be a non-empty string" };
-    }
-
-    if (typeof data.value !== "number" || isNaN(data.value) || data.value < 0) {
-      throw { status: 422, message: "Field 'value' must be a positive number" };
-    }
-
-    const productExists = await this.repository.findProductByCode(data.code);
+    const productExists = await this.repository.findProductByCode(
+      parsed.data.code,
+    );
     if (productExists) {
       throw { status: 409, message: "Product code already exists" };
     }
 
-    return this.repository.createProduct(data);
+    return this.repository.createProduct(parsed.data);
   }
 
   async getAllProducts() {
@@ -71,23 +68,17 @@ export class ProductService {
       throw { status: 422, message: "Request body cannot be empty" };
     }
 
-    if (
-      data.value !== undefined &&
-      (typeof data.value !== "number" || isNaN(data.value) || data.value < 0)
-    ) {
-      throw { status: 422, message: "Field 'value' must be a positive number" };
+    const parsed = UpdateProductSchema.safeParse(data);
+    if (!parsed.success) {
+      throw {
+        status: 422,
+        message: parsed.error.issues[0]?.message || "Validation failed",
+      };
     }
 
-    if (
-      data.name !== undefined &&
-      (typeof data.name !== "string" || data.name.trim().length === 0)
-    ) {
-      throw { status: 422, message: "Field 'name' must be a non-empty string" };
-    }
-
-    if (data.code && typeof data.code === "string") {
+    if (parsed.data.code) {
       const productWithCode = await this.repository.findProductByCode(
-        data.code,
+        parsed.data.code,
       );
       if (productWithCode && productWithCode.id !== id) {
         throw {
@@ -97,7 +88,7 @@ export class ProductService {
       }
     }
 
-    return this.repository.updateProduct(id, data);
+    return this.repository.updateProduct(id, parsed.data);
   }
 
   async deleteProduct(id: string) {
