@@ -1,63 +1,100 @@
-import Image from "next/image";
+"use client";
+
+import { useState } from "react";
+import { ProductsPage } from "@/components/products/products-page";
+import { RawMaterialsPage } from "@/components/raw-materials/raw-materials-page";
+import { ProductionPage } from "@/components/production/production-page";
+import { Button } from "@/components/ui/button";
+import { Package, ShoppingCart, BarChart3, Menu } from "lucide-react";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+
+type Tab = "products" | "materials" | "production";
 
 export default function Home() {
+  const [activeTab, setActiveTab] = useState<Tab>("products");
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const navItems = [
+    { id: "products" as Tab, label: "Products", icon: ShoppingCart },
+    { id: "materials" as Tab, label: "Raw Materials", icon: Package },
+    { id: "production" as Tab, label: "Production Info", icon: BarChart3 },
+  ];
+
+  const NavContent = () => (
+    <nav className="flex flex-col gap-2 mt-8">
+      {navItems.map((item) => (
+        <Button
+          key={item.id}
+          variant={activeTab === item.id ? "default" : "ghost"}
+          className="justify-start gap-3 w-full"
+          onClick={() => {
+            setActiveTab(item.id);
+            setIsMobileMenuOpen(false);
+          }}
+        >
+          <item.icon size={18} />
+          {item.label}
+        </Button>
+      ))}
+    </nav>
+  );
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div className="flex min-h-screen bg-slate-50 flex-col lg:flex-row">
+      {/* Mobile Header */}
+      <header className="lg:hidden flex items-center justify-between p-4 bg-white border-b sticky top-0 z-40">
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white">
+            <Package size={20} />
+          </div>
+          <span className="font-bold text-lg">AutoFlex</span>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+
+        <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
+          <SheetTrigger asChild>
+            <Button variant="ghost" size="icon">
+              <Menu size={24} />
+            </Button>
+          </SheetTrigger>
+          <SheetContent side="left" className="w-72">
+            <SheetHeader className="text-left">
+              <SheetTitle className="flex items-center gap-2">
+                <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white">
+                  <Package size={20} />
+                </div>
+                AutoFlex
+              </SheetTitle>
+            </SheetHeader>
+            <NavContent />
+          </SheetContent>
+        </Sheet>
+      </header>
+
+      {/* Desktop Sidebar */}
+      <aside className="hidden lg:flex w-64 bg-white border-r border-slate-200 p-6 flex-col gap-8 sticky top-0 h-screen">
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white">
+            <Package size={20} />
+          </div>
+          <h1 className="font-bold text-xl text-slate-900 tracking-tight">
+            AutoFlex
+          </h1>
+        </div>
+        <NavContent />
+      </aside>
+
+      {/* Main Content */}
+      <main className="flex-1 p-4 md:p-8">
+        <div className="max-w-6xl mx-auto">
+          {activeTab === "products" && <ProductsPage />}
+          {activeTab === "materials" && <RawMaterialsPage />}
+          {activeTab === "production" && <ProductionPage />}
         </div>
       </main>
     </div>
