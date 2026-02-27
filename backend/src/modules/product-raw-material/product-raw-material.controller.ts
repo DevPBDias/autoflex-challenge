@@ -13,11 +13,9 @@ export class ProductRawMaterialController {
     try {
       const parsed = AddRawMaterialToProductSchema.safeParse(req.body);
       if (!parsed.success) {
-        return res
-          .status(422)
-          .json({
-            error: parsed.error.issues[0]?.message || "Validation error",
-          });
+        return res.status(422).json({
+          error: parsed.error.issues[0]?.message || "Validation error",
+        });
       }
 
       const association = await this.service.addRawMaterialToProduct(
@@ -25,7 +23,7 @@ export class ProductRawMaterialController {
       );
       return res.status(201).json({
         message: "Raw material associated successfully",
-        data: association,
+        association,
       });
     } catch (error: any) {
       const status = error.status || 500;
@@ -63,7 +61,7 @@ export class ProductRawMaterialController {
       );
       return res.status(200).json({
         message: "Product composition retrieved successfully",
-        data: composition,
+        composition,
       });
     } catch (error: any) {
       const status = error.status || 500;

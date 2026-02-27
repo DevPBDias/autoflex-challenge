@@ -13,7 +13,7 @@ export class RawMaterialController {
       const rawMaterial = await this.service.createRawMaterial(req.body);
       return res.status(201).json({
         message: "Raw material created successfully",
-        data: rawMaterial,
+        rawMaterial,
       });
     } catch (error: any) {
       const status = error.status || 500;
@@ -27,7 +27,7 @@ export class RawMaterialController {
       const rawMaterials = await this.service.getAllRawMaterials();
       return res.status(200).json({
         message: "Raw materials retrieved successfully",
-        data: rawMaterials,
+        rawMaterials,
       });
     } catch (error: any) {
       return res.status(500).json({ error: "Internal server error" });
@@ -42,7 +42,7 @@ export class RawMaterialController {
       );
       return res.status(200).json({
         message: "Raw material found successfully",
-        data: rawMaterial,
+        rawMaterial,
       });
     } catch (error: any) {
       const status = error.status || 500;
@@ -60,7 +60,7 @@ export class RawMaterialController {
       );
       return res.status(200).json({
         message: "Raw material updated successfully",
-        data: rawMaterial,
+        rawMaterial,
       });
     } catch (error: any) {
       const status = error.status || 500;

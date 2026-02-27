@@ -13,7 +13,7 @@ export class ProductionController {
       const suggestion = await this.service.suggestProduction();
       return res.status(200).json({
         message: "Production suggestion calculated successfully",
-        data: suggestion,
+        suggestion,
       });
     } catch (error: any) {
       const status = error.status || 500;

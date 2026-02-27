@@ -1,7 +1,6 @@
 import request from "supertest";
 import app from "../../../app";
 
-// Mock do Prisma inteiro — não queremos acessar banco nos testes
 jest.mock("../../../config/prisma", () => ({
   prisma: {
     product: {
@@ -51,8 +50,8 @@ describe("Product Routes (Integration)", () => {
 
       expect(response.status).toBe(201);
       expect(response.body.message).toBe("Product created successfully");
-      expect(response.body.data).toBeDefined();
-      expect(response.body.data.code).toBe("PRD-001");
+      expect(response.body.product).toBeDefined();
+      expect(response.body.product.code).toBe("PRD-001");
     });
 
     it("should return 422 when body is missing fields", async () => {
@@ -95,8 +94,8 @@ describe("Product Routes (Integration)", () => {
 
       expect(response.status).toBe(200);
       expect(response.body.message).toBe("Products retrieved successfully");
-      expect(Array.isArray(response.body.data)).toBe(true);
-      expect(response.body.data.length).toBe(1);
+      expect(Array.isArray(response.body.products)).toBe(true);
+      expect(response.body.products.length).toBe(1);
     });
 
     it("should return 200 with empty array", async () => {
@@ -105,7 +104,7 @@ describe("Product Routes (Integration)", () => {
       const response = await request(app).get("/products");
 
       expect(response.status).toBe(200);
-      expect(response.body.data).toEqual([]);
+      expect(response.body.products).toEqual([]);
     });
   });
 
@@ -117,7 +116,7 @@ describe("Product Routes (Integration)", () => {
 
       expect(response.status).toBe(200);
       expect(response.body.message).toBe("Product found successfully");
-      expect(response.body.data.code).toBe("PRD-001");
+      expect(response.body.product.code).toBe("PRD-001");
     });
 
     it("should return 400 for invalid UUID", async () => {
@@ -137,23 +136,24 @@ describe("Product Routes (Integration)", () => {
     });
   });
 
-  describe("PUT /products/:id", () => {
+  describe("PATCH /products/:id", () => {
     it("should return 200 with updated product", async () => {
       const updated = { ...mockProduct, name: "Updated" };
       prismaMock.findUnique.mockResolvedValue(mockProduct);
       prismaMock.update.mockResolvedValue(updated);
 
       const response = await request(app)
-        .put(`/products/${VALID_UUID}`)
+        .patch(`/products/${VALID_UUID}`)
         .send({ name: "Updated" });
 
       expect(response.status).toBe(200);
       expect(response.body.message).toBe("Product updated successfully");
+      expect(response.body.product).toBeDefined();
     });
 
     it("should return 400 for invalid UUID", async () => {
       const response = await request(app)
-        .put("/products/bad-id")
+        .patch("/products/bad-id")
         .send({ name: "X" });
 
       expect(response.status).toBe(400);
@@ -164,7 +164,7 @@ describe("Product Routes (Integration)", () => {
       prismaMock.findUnique.mockResolvedValue(null);
 
       const response = await request(app)
-        .put(`/products/${VALID_UUID}`)
+        .patch(`/products/${VALID_UUID}`)
         .send({ name: "X" });
 
       expect(response.status).toBe(404);
@@ -175,7 +175,7 @@ describe("Product Routes (Integration)", () => {
       prismaMock.findUnique.mockResolvedValue(mockProduct);
 
       const response = await request(app)
-        .put(`/products/${VALID_UUID}`)
+        .patch(`/products/${VALID_UUID}`)
         .send({});
 
       expect(response.status).toBe(422);

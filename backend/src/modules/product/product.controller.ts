@@ -13,7 +13,7 @@ export class ProductController {
       const product = await this.service.createProduct(req.body);
       return res.status(201).json({
         message: "Product created successfully",
-        data: product,
+        product,
       });
     } catch (error: any) {
       const status = error.status || 500;
@@ -27,7 +27,7 @@ export class ProductController {
       const products = await this.service.getAllProducts();
       return res.status(200).json({
         message: "Products retrieved successfully",
-        data: products,
+        products,
       });
     } catch (error: any) {
       return res.status(500).json({ error: "Internal server error" });
@@ -40,7 +40,7 @@ export class ProductController {
       const product = await this.service.getOneProductById(id as string);
       return res.status(200).json({
         message: "Product found successfully",
-        data: product,
+        product,
       });
     } catch (error: any) {
       const status = error.status || 500;
@@ -55,7 +55,7 @@ export class ProductController {
       const product = await this.service.updateProduct(id as string, req.body);
       return res.status(200).json({
         message: "Product updated successfully",
-        data: product,
+        product,
       });
     } catch (error: any) {
       const status = error.status || 500;

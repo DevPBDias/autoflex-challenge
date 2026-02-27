@@ -44,7 +44,7 @@ describe("ProductController", () => {
       expect(res.status).toHaveBeenCalledWith(201);
       expect(res.json).toHaveBeenCalledWith({
         message: "Product created successfully",
-        data: mockProduct,
+        product: mockProduct,
       });
     });
 
@@ -115,7 +115,7 @@ describe("ProductController", () => {
       expect(res.status).toHaveBeenCalledWith(200);
       expect(res.json).toHaveBeenCalledWith({
         message: "Products retrieved successfully",
-        data: [mockProduct],
+        products: [mockProduct],
       });
     });
 
@@ -128,7 +128,7 @@ describe("ProductController", () => {
       expect(res.status).toHaveBeenCalledWith(200);
       expect(res.json).toHaveBeenCalledWith({
         message: "Products retrieved successfully",
-        data: [],
+        products: [],
       });
     });
 
@@ -155,7 +155,7 @@ describe("ProductController", () => {
       expect(res.status).toHaveBeenCalledWith(200);
       expect(res.json).toHaveBeenCalledWith({
         message: "Product found successfully",
-        data: mockProduct,
+        product: mockProduct,
       });
     });
 
@@ -213,7 +213,7 @@ describe("ProductController", () => {
       expect(res.status).toHaveBeenCalledWith(200);
       expect(res.json).toHaveBeenCalledWith({
         message: "Product updated successfully",
-        data: updated,
+        product: updated,
       });
     });
 

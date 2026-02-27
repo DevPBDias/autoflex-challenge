@@ -16,6 +16,6 @@ describe("Production Routes Integration", () => {
 
     const response = await request(app).get("/production/suggest");
     expect(response.status).toBe(200);
-    expect(response.body.data).toHaveProperty("suggestedProduction");
+    expect(response.body.suggestion).toHaveProperty("suggestedProduction");
   });
 });
