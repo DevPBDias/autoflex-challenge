@@ -9,8 +9,8 @@ export interface ProductionAvailability {
 export const productionService = {
   getAvailability: async () => {
     const response = await api.get<{
-      data: { suggestedProduction: ProductionAvailability[] };
+      suggestion: { suggestedProduction: ProductionAvailability[] };
     }>("/production/suggest");
-    return response.data.data.suggestedProduction;
+    return response.data.suggestion.suggestedProduction;
   },
 };

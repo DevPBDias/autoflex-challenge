@@ -17,28 +17,30 @@ export interface UpdateRawMaterialDTO extends Partial<CreateRawMaterialDTO> {}
 
 export const rawMaterialsService = {
   getAll: async () => {
-    const response = await api.get<{ data: RawMaterial[] }>("/raw-materials");
-    return response.data.data;
+    const response = await api.get<{ rawMaterials: RawMaterial[] }>(
+      "/raw-materials",
+    );
+    return response.data.rawMaterials;
   },
   getById: async (id: string) => {
-    const response = await api.get<{ data: RawMaterial }>(
+    const response = await api.get<{ rawMaterial: RawMaterial }>(
       `/raw-materials/${id}`,
     );
-    return response.data.data;
+    return response.data.rawMaterial;
   },
-  create: async (data: CreateRawMaterialDTO) => {
-    const response = await api.post<{ data: RawMaterial }>(
+  create: async (payload: CreateRawMaterialDTO) => {
+    const response = await api.post<{ rawMaterial: RawMaterial }>(
       "/raw-materials",
-      data,
+      payload,
     );
-    return response.data.data;
+    return response.data.rawMaterial;
   },
-  update: async (id: string, data: UpdateRawMaterialDTO) => {
-    const response = await api.patch<{ data: RawMaterial }>(
+  update: async (id: string, payload: UpdateRawMaterialDTO) => {
+    const response = await api.patch<{ rawMaterial: RawMaterial }>(
       `/raw-materials/${id}`,
-      data,
+      payload,
     );
-    return response.data.data;
+    return response.data.rawMaterial;
   },
   delete: async (id: string) => {
     await api.delete(`/raw-materials/${id}`);

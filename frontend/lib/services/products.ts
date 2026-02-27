@@ -17,23 +17,23 @@ export interface UpdateProductDTO extends Partial<CreateProductDTO> {}
 
 export const productsService = {
   getAll: async () => {
-    const response = await api.get<{ data: Product[] }>("/products");
-    return response.data.data;
+    const response = await api.get<{ products: Product[] }>("/products");
+    return response.data.products;
   },
   getById: async (id: string) => {
-    const response = await api.get<{ data: Product }>(`/products/${id}`);
-    return response.data.data;
+    const response = await api.get<{ product: Product }>(`/products/${id}`);
+    return response.data.product;
   },
-  create: async (data: CreateProductDTO) => {
-    const response = await api.post<{ data: Product }>("/products", data);
-    return response.data.data;
+  create: async (payload: CreateProductDTO) => {
+    const response = await api.post<{ product: Product }>("/products", payload);
+    return response.data.product;
   },
-  update: async (id: string, data: UpdateProductDTO) => {
-    const response = await api.patch<{ data: Product }>(
+  update: async (id: string, payload: UpdateProductDTO) => {
+    const response = await api.patch<{ product: Product }>(
       `/products/${id}`,
-      data,
+      payload,
     );
-    return response.data.data;
+    return response.data.product;
   },
   delete: async (id: string) => {
     await api.delete(`/products/${id}`);
