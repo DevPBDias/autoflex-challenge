@@ -7,7 +7,7 @@ const controller = new RawMaterialController();
 rawMaterialRoutes.post("/", controller.createRawMaterial);
 rawMaterialRoutes.get("/", controller.getAllRawMaterials);
 rawMaterialRoutes.get("/:id", controller.getOneRawMaterialById);
-rawMaterialRoutes.put("/:id", controller.updateRawMaterial);
+rawMaterialRoutes.patch("/:id", controller.updateRawMaterial);
 rawMaterialRoutes.delete("/:id", controller.deleteRawMaterial);
 
 export { rawMaterialRoutes };
