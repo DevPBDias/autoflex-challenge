@@ -52,6 +52,7 @@ export function ProductForm({ initialData, onSuccess }: ProductFormProps) {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["products"] });
+      queryClient.invalidateQueries({ queryKey: ["production-availability"] });
       toast.success(
         initialData ? "Updated successfully" : "Created successfully",
       );

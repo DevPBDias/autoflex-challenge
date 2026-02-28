@@ -6,11 +6,16 @@ export interface ProductionAvailability {
   quantityToProduce: number;
 }
 
+export interface ProductionResponse {
+  suggestedProduction: ProductionAvailability[];
+  totalEstimatedValue: number;
+}
+
 export const productionService = {
-  getAvailability: async () => {
+  getAvailability: async (): Promise<ProductionResponse> => {
     const response = await api.get<{
-      suggestion: { suggestedProduction: ProductionAvailability[] };
+      suggestion: ProductionResponse;
     }>("/production/suggest");
-    return response.data.suggestion.suggestedProduction;
+    return response.data.suggestion;
   },
 };

@@ -55,6 +55,7 @@ export function RawMaterialForm({
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["raw-materials"] });
+      queryClient.invalidateQueries({ queryKey: ["production-availability"] });
       toast.success(
         initialData ? "Updated successfully" : "Created successfully",
       );

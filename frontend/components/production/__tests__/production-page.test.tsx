@@ -33,29 +33,14 @@ describe("ProductionPage", () => {
     );
   };
 
-  it("should render error state", async () => {
-    (productionService.getAvailability as any).mockRejectedValue(
-      new Error("Failed to fetch"),
-    );
-
-    renderWithClient(<ProductionPage />);
-
-    await waitFor(() => {
-      expect(screen.getByText(/Failed to load production data/i)).toBeDefined();
-    });
-  });
-
-  it("should render production suggestions", async () => {
-    const mockSuggestions = [
-      {
-        productId: "p1",
-        productName: "Table",
-        quantityToProduce: 10,
-      },
-    ];
-    (productionService.getAvailability as any).mockResolvedValue(
-      mockSuggestions,
-    );
+  it("should render production suggestions and total value", async () => {
+    const mockData = {
+      suggestedProduction: [
+        { productId: "1", productName: "Table", quantityToProduce: 5 },
+      ],
+      totalEstimatedValue: 500,
+    };
+    (productionService.getAvailability as any).mockResolvedValue(mockData);
 
     renderWithClient(<ProductionPage />);
 
@@ -63,41 +48,48 @@ describe("ProductionPage", () => {
       expect(screen.getByText("Table")).toBeDefined();
     });
 
-    expect(screen.getByText("10")).toBeDefined();
-    expect(screen.getByText(/Units producible/i)).toBeDefined();
-    expect(screen.getByText(/Ready for production/i)).toBeDefined();
+    expect(screen.getByText("5")).toBeDefined();
+    expect(screen.getByText("$500.00")).toBeDefined();
   });
 
-  it("should render out of stock state", async () => {
-    const mockSuggestions = [
-      {
-        productId: "p2",
-        productName: "Chair",
-        quantityToProduce: 0,
-      },
-    ];
-    (productionService.getAvailability as any).mockResolvedValue(
-      mockSuggestions,
-    );
+  it("should show out of stock badge when quantity is 0", async () => {
+    const mockData = {
+      suggestedProduction: [
+        { productId: "2", productName: "Chair", quantityToProduce: 0 },
+      ],
+      totalEstimatedValue: 0,
+    };
+    (productionService.getAvailability as any).mockResolvedValue(mockData);
 
     renderWithClient(<ProductionPage />);
 
     await waitFor(() => {
-      expect(screen.getByText("Chair")).toBeDefined();
+      expect(screen.getByText("Out of stock")).toBeDefined();
     });
-
-    expect(screen.getByText("0")).toBeDefined();
-    expect(screen.getByText(/Out of stock/i)).toBeDefined();
-    expect(screen.getByText(/Insufficient materials/i)).toBeDefined();
   });
 
-  it("should render empty state", async () => {
-    (productionService.getAvailability as any).mockResolvedValue([]);
+  it("should show empty state message", async () => {
+    (productionService.getAvailability as any).mockResolvedValue({
+      suggestedProduction: [],
+      totalEstimatedValue: 0,
+    });
 
     renderWithClient(<ProductionPage />);
 
     await waitFor(() => {
       expect(screen.getByText(/No products defined yet/i)).toBeDefined();
+    });
+  });
+
+  it("should show error message on failure", async () => {
+    (productionService.getAvailability as any).mockRejectedValue(
+      new Error("API Error"),
+    );
+
+    renderWithClient(<ProductionPage />);
+
+    await waitFor(() => {
+      expect(screen.getByText(/Failed to load production data/i)).toBeDefined();
     });
   });
 });

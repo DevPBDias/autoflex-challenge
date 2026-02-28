@@ -1,3 +1,4 @@
+/// <reference types="node" />
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
@@ -5,12 +6,10 @@ const prisma = new PrismaClient();
 async function main() {
   console.log("🌱 Start seeding...");
 
-  // 1. Limpar banco de dados (opcional, cuidado em prod)
   await prisma.productRawMaterial.deleteMany({});
   await prisma.product.deleteMany({});
   await prisma.rawMaterial.deleteMany({});
 
-  // 2. Criar Matérias-primas
   const steel = await prisma.rawMaterial.create({
     data: {
       code: "RM-STEEL-001",
@@ -35,7 +34,6 @@ async function main() {
     },
   });
 
-  // 3. Criar Produtos com relacionamento N:N
   const industrialCabinet = await prisma.product.create({
     data: {
       code: "PRD-CAB-01",
@@ -45,11 +43,11 @@ async function main() {
         create: [
           {
             rawMaterialId: steel.id,
-            requiredQuantity: 5.5, // 5.5 sheets per cabinet
+            requiredQuantity: 5.5,
           },
           {
             rawMaterialId: paint.id,
-            requiredQuantity: 0.8, // 0.8 liters per cabinet
+            requiredQuantity: 0.8,
           },
         ],
       },

@@ -49,6 +49,9 @@ export function ProductComposition({ productId }: ProductCompositionProps) {
       queryClient.invalidateQueries({
         queryKey: ["product-composition", productId],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["production-availability"],
+      });
       toast.success("Material added to product");
       setSelectedMaterialId("");
       setQuantity(1);
@@ -62,6 +65,9 @@ export function ProductComposition({ productId }: ProductCompositionProps) {
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["product-composition", productId],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["production-availability"],
       });
       toast.success("Material removed from product");
     },
