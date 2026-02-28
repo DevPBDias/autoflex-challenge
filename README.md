@@ -22,7 +22,7 @@ A aplicação segue uma arquitetura moderna _fullstack_, com separação clara e
            ↓ HTTP (REST API)
 [Node.js API (Backend)]
            ↓ Prisma ORM
-[PostgreSQL Database]
+[PostgreSQL and Docker (Database)]
 ```
 
 ## 🖥️ Tecnologias Utilizadas
