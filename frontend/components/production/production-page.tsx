@@ -47,7 +47,7 @@ export function ProductionPage() {
           </p>
           <p className="text-3xl font-black text-blue-700">
             $
-            {data?.totalEstimatedValue.toLocaleString(undefined, {
+            {data?.totalEstimatedValue.toLocaleString("en-US", {
               minimumFractionDigits: 2,
               maximumFractionDigits: 2,
             })}
