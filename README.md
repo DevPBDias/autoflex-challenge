@@ -27,11 +27,12 @@ A aplicação segue uma arquitetura moderna _fullstack_, com separação clara e
 
 ## 🖥️ Tecnologias Utilizadas
 
-### Backend
+### Backend e Banco de Dados
 
 - **Node.js** com **TypeScript**
 - **Prisma ORM** (para abstração relacional e migrations seguras)
 - **PostgreSQL** (banco de dados escalável)
+- **Docker** (usado com imagem do PostgreSQL em um container, para o banco de dados)
 - **Vitest** (Testes unitários super-rápidos)
 - **Supertest** (Testes de integração garantindo o ciclo HTTP -> DB)
 
