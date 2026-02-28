@@ -19,6 +19,7 @@ describe("productionService", () => {
         suggestedProduction: [
           { productId: "1", productName: "Table", quantityToProduce: 5 },
         ],
+        totalEstimatedValue: 500,
       },
     };
     (api.get as any).mockResolvedValue({ data: mockData });
@@ -26,6 +27,6 @@ describe("productionService", () => {
     const result = await productionService.getAvailability();
 
     expect(api.get).toHaveBeenCalledWith("/production/suggest");
-    expect(result).toEqual(mockData.suggestion.suggestedProduction);
+    expect(result).toEqual(mockData.suggestion);
   });
 });
